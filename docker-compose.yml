@@ -1,0 +1,25 @@
+version: '3'
+services:
+  web:
+    image: licoppppp/licopub:0.1.3-public
+    environment:
+      - PYTHONUNBUFFERED=1
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - PINECONE_API_KEY=${PINECONE_API_KEY}
+      - PINECONE_ENVIRONMENT=${PINECONE_ENVIRONMENT}
+      - VECTOR_SPACE_NAME=${VECTOR_SPACE_NAME}
+      - CHATGPT_ACCESS_TOKEN=${CHATGPT_ACCESS_TOKEN}
+      - SYSTEM_PROMPT=${SYSTEM_PROMPT}
+      - API_BASE=${API_BASE}
+      - MODEL_NAME=${MODEL_NAME}
+    ports:
+      - "8000:8000"
+    networks:
+      - internal_network  # 确保服务连接到内部网络
+
+volumes:
+  nginx-config:  # 定义了一个名为 nginx-config 的持久化卷
+
+networks:
+  internal_network:  # 定义了一个名为 internal_network 的内部网络，使用 bridge 驱动
+    driver: bridge

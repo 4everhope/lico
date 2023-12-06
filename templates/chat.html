@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    
+    <meta charset="UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Lico Chat</title>
+    
+    <style>
+
+        .icon-title-container {
+            display: flex;           
+            align-items: center;     
+            gap: 15px;               
+        }
+
+        
+        #icon-image {
+            margin-top: 10px;
+            width:75px;  
+            height: 75px;
+            margin-bottom: 5px; 
+            border-radius: 50%; 
+        }
+        
+        h3 {
+            font-size: 1.5em;
+            margin-bottom: 1%;
+            text-align: center;
+            color: #333;
+        }
+        
+        
+        
+        body {
+            font-family: 'Arial', sans-serif;      
+            background-color: #d9dcc8;             
+            margin: 0;                             
+            padding: 30px 0px;                         
+            display: flex;                         
+            justify-content: center;               
+            align-items: center;                   
+            height: 80vh;                         
+            flex-direction: column;   
+        }
+
+        #chat-container {
+            background-color: #d9faf75f;
+            border-radius: 12px;
+            width: 90%;
+            height: 1000%;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        
+        #chat-history {
+            text-align: left;
+            max-height: 900%;                     
+            overflow-y: auto;                      
+            padding: 25px;                         
+            border-bottom: 1px solid #e7e7e7;      
+        }
+
+        
+        #chat-form {
+            display: flex;                         
+            align-items: center;                   
+            padding: 15px 10px;                    
+            background-color: #d9faf75f;             
+        }
+        
+        #chat-form input {
+            width: 70%;
+            padding: 10px 15px;                    
+            margin-right: 10px;                    
+            border: 1px solid #e0e0e0;             
+            border-radius: 18px;                   
+            font-size: 16px;                       
+            background-color: #f5f5f5;             
+        }
+
+
+        
+        #chat-form button {
+            padding: 10px 20px;                    
+            background-color: #007BFF;             
+            color: #fff;                           
+            border: none;                          
+            border-radius: 18px;                   
+            cursor: pointer;                       
+            transition: background-color 0.3s;     
+            font-size: 16px;                       
+        }
+
+        
+        #chat-form button:hover {
+            background-color: #0c6a59;             
+        }
+
+        
+        p {
+            margin: 5px 0;                         
+        }
+
+        
+        @media (max-width: 768px) {
+            #chat-container {
+                width: 90%; 
+            }
+            #icon-image {
+                width: 70px;
+                height: 70px;
+            }
+            h1 {
+                font-size: 1.5em;
+            }
+        }
+
+
+        
+        @media (min-width: 769px) and (max-width: 1024px) {
+            #chat-container {
+                width: 85%; 
+            }
+        }
+
+        
+        @media (min-width: 1025px) {
+            #chat-container {
+                width: 75%; 
+            }
+        }
+    </style>
+    
+</head>
+
+<body>
+    <div class="icon-title-container">
+        
+        <img id="icon-image" src="/static/icon.png" alt="Lico Icon">
+        
+        <h3>Lico!! v0.1.3</h3>
+    </div>
+    <div id="chat-container">
+
+        <div id="chat-history">
+            {% for speaker, message in chat_history %}
+                <p><strong>{{ speaker }}:</strong> {{ message }}</p>
+            {% endfor %}
+        </div>
+
+        <form id="chat-form" action="/" method="post">
+            <input type="text" name="user_message" placeholder="Enter your message..." required>
+            <button type="submit">Send</button>
+        </form>
+
+        <audio id="audio-player" controls style="display:none;"></audio>  
+    </div>
+    <div class="icon-title-container">
+        <button id="clear-history-btn">清除历史</button>
+    <label>
+        Enable Voice:
+        <input type="checkbox" id="voice-toggle">
+    </label>
+    </div>
+    
+    
+    <script>
+        const chatForm = document.getElementById("chat-form");
+        const chatHistory = document.getElementById("chat-history");
+        const userMessageInput = chatForm.querySelector('[name="user_message"]');
+        const audioPlayer = document.getElementById('audio-player');  
+        const voiceToggle = document.getElementById('voice-toggle');
+        const clearHistoryBtn = document.getElementById('clear-history-btn');
+
+        clearHistoryBtn.addEventListener('click', function() {
+            chatHistory.innerHTML = "";  
+        });
+
+        
+    
+        chatForm.onsubmit = async function(e) {
+            e.preventDefault();  
+    
+            
+            const userMessage = userMessageInput.value;
+            chatHistory.innerHTML += `<p><strong>You:</strong> ${userMessage}</p>`;
+    
+            
+            userMessageInput.value = "";
+    
+            const formData = new FormData(chatForm);
+            formData.set("user_message", userMessage); 
+            formData.set("enable_voice", voiceToggle.checked); 
+    
+            const response = await fetch('/', {
+                method: 'POST',
+                body: formData
+            });
+    
+            const responseData = await response.json();
+    
+            console.log('Response data:', responseData);  
+    
+            
+            chatHistory.innerHTML += `<p><strong>Lico:</strong> ${responseData.bot_reply}</p>`;
+    
+            
+            if (responseData.audio_file !== null && responseData.audio_file !== undefined) {
+                
+                audioPlayer.src = `/${responseData.audio_file}?_=${new Date().getTime()}`;
+                audioPlayer.style.display = 'block';
+    
+                
+                setTimeout(() => {
+                    audioPlayer.play();
+                }, 10);
+    
+                
+                audioPlayer.onended = async function() {
+                    await fetch(`/delete_audio/${responseData.audio_file}`, {
+                        method: 'POST'
+                    });
+                    audioPlayer.style.display = 'none';  
+                };
+            }
+        };
+    </script>    
+</body>
+
+</html>
