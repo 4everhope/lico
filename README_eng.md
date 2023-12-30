@@ -19,19 +19,6 @@ If you're interested in related knowledge, feel free to visit my [blog](https://
 
 - Yet to be determined
 
-### Personal version task list
-
-- [x] Fuzzy commands
-- [x] RSS subscriptions
-- [ ] Full voice interaction
-- [x] Offline voice wake-up
-- [ ] Voiceprint recognition
-- [ ] Scene adaptation
-- [ ] Music player
-- [ ] Self-iterative capabilities
-- [ ] Proactive responses
-- [ ] Guided hierarchical memory
-
 # Installation and Usage:
 
 > Currently, only AMD64 architecture images are available. However, the source code is provided for compilation. Ensure your Docker can successfully connect to Pinecone and OpenAI services.
