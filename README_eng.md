@@ -6,8 +6,6 @@ A chatbot system based on Langchain and LLM.
 
 "LICO" is a humble personal project, aimed at cobbling together various existing technologies into a personal AI assistant. It aims to achieve fully automated information processing, memory retention, reminders, control functionalities, balancing cost and human-machine effectiveness.
 
-If you're interested in related knowledge, feel free to visit my [blog](https://blog.licolico.top). It might just be a case of casting pearls before swine, but hopefully, it might provoke some insightful thoughts.
-
 ### Current functionalities supported by the open-source version:
 
 - [x] Connectivity to OpenAI API
