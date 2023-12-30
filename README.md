@@ -1,5 +1,7 @@
 # LICO
 
+[English Introduction](https://github.com/4everhope/lico/blob/main/README_eng.md)
+
 一个基于Langchain和LLM的聊天机器人系统。
 
 “LICO”是一个没用的自娱自乐的个人项目，旨在拼凑各种现有技术成个人AI助理，实现全自动信息处理、记忆、提醒、控制等功能，兼顾成本和人机功效。

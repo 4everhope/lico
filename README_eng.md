@@ -1,5 +1,7 @@
 # LICO
 
+这里有[中文介绍](https://github.com/4everhope/lico/blob/main/README.md)
+
 A chatbot system based on Langchain and LLM.
 
 "LICO" is a humble personal project, aimed at cobbling together various existing technologies into a personal AI assistant. It aims to achieve fully automated information processing, memory retention, reminders, control functionalities, balancing cost and human-machine effectiveness.
